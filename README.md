@@ -1,11 +1,11 @@
-# US Treasury Yield Curve Processor
+# US Treasury Yield Curve Calculator
 
 [![Python CI](https://github.com/userFRM/interest-rate-calculation-vix/actions/workflows/ci.yml/badge.svg)](https://github.com/userFRM/interest-rate-calculation-vix/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://www.docker.com/)
 
-A Python tool that fetches US Treasury yield curve data and calculates risk-free rates for VIX-style volatility calculations. This implementation follows the Cboe VIX Mathematics Methodology for interest rate calculations.
+A Python tool that fetches US Treasury yield curve data and calculates risk-free rates for VIX-style volatility calculations. This implementation follows the CBOE VIX Mathematics Methodology for interest rate calculations.
 
 ## Features
 
@@ -19,7 +19,7 @@ A Python tool that fetches US Treasury yield curve data and calculates risk-free
 
 ## VIX Methodology Support
 
-This processor implements the interest rate calculation methodology from the Cboe VIX Mathematics Methodology document:
+This processor implements the interest rate calculation methodology from the CBOE VIX Mathematics Methodology document:
 
 - **BEY to APY conversion**: `APY = (1 + BEY/2)^2 - 1`
 - **Continuous rate conversion**: `r_t = ln(1 + APY)`
@@ -205,11 +205,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - US Treasury for providing public yield curve data
-- Cboe for the VIX Mathematics Methodology documentation
+- CBOE for the VIX Mathematics Methodology documentation
 - The Python community for the excellent standard library
 
 ## Support
 
 - 🐛 Issues: [GitHub Issues](https://github.com/userFRM/interest-rate-calculation-vix/issues)
 - 💬 Discussions: [GitHub Discussions](https://github.com/userFRM/interest-rate-calculation-vix/discussions)
-```
