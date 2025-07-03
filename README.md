@@ -1,6 +1,6 @@
 # US Treasury Yield Curve Processor
 
-[![Python CI](https://github.com/userFRM/treasury-rates-processor/actions/workflows/ci.yml/badge.svg)](https://github.com/userFRM/treasury-rates-processor/actions/workflows/ci.yml)
+[![Python CI](https://github.com/userFRM/interest-rate-calculation-vix/actions/workflows/ci.yml/badge.svg)](https://github.com/userFRM/interest-rate-calculation-vix/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://www.docker.com/)
@@ -31,8 +31,8 @@ This processor implements the interest rate calculation methodology from the Cbo
 
 ```bash
 # Clone the repository
-git clone https://github.com/userFRM/treasury-rates-processor.git
-cd treasury-rates-processor
+git clone https://github.com/userFRM/interest-rate-calculation-vix.git
+cd interest-rate-calculation-vix
 
 # No dependencies to install! Uses only Python standard library
 ```
@@ -210,6 +210,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- 🐛 Issues: [GitHub Issues](https://github.com/userFRM/treasury-rates-processor/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/userFRM/treasury-rates-processor/discussions)
+- 🐛 Issues: [GitHub Issues](https://github.com/userFRM/interest-rate-calculation-vix/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/userFRM/interest-rate-calculation-vix/discussions)
 ```
