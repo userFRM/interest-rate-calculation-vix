@@ -40,10 +40,10 @@ cd interest-rate-calculation-vix
 
 ```bash
 # Build the Docker image
-docker build -t treasury-rates .
+docker build -t interest-rate-calculation-vix .
 
 # Or pull from Docker Hub (if available)
-docker pull userfrm/treasury-rates:latest
+docker pull userfrm/interest-rate-calculation-vix:latest
 ```
 
 ## Usage
@@ -71,13 +71,13 @@ python src/treasury_rates.py --near 23 --next 30 --year 2024 --verbose
 
 ```bash
 # Run with default settings
-docker run treasury-rates
+docker run interest-rate-calculation-vix
 
 # Run with custom parameters
-docker run treasury-rates --near 23 --next 30
+docker run interest-rate-calculation-vix --near 23 --next 30
 
 # Save output to host machine
-docker run -v $(pwd):/data treasury-rates --output-file /data/rates.json
+docker run -v $(pwd):/data interest-rate-calculation-vix --output-file /data/rates.json
 
 # Run as a service
 docker-compose up -d
