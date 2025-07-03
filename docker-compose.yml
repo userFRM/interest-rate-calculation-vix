@@ -1,0 +1,27 @@
+services:
+  treasury-rates:
+    build: .
+    image: treasury-rates:latest
+    container_name: treasury-rates-processor
+    volumes:
+      - ./data:/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: ["--output-file", "/data/latest_rates.json", "--verbose"]
+    restart: unless-stopped
+
+  # Optional: Run as a periodic job
+  treasury-rates-cron:
+    build: .
+    image: treasury-rates:latest
+    container_name: treasury-rates-cron
+    volumes:
+      - ./data:/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    entrypoint: |
+      sh -c 'while true; do
+        python treasury_rates.py --output-file /data/rates_$$(date +%Y%m%d_%H%M%S).json --json-only
+        sleep 3600
+      done'
+    restart: unless-stopped
