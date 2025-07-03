@@ -5,7 +5,7 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://www.docker.com/)
 
-A Python tool that fetches US Treasury yield curve data and calculates risk-free rates for VIX-style volatility calculations. This implementation follows the CBOE VIX Mathematics Methodology for interest rate calculations.
+A Python tool that fetches US Treasury yield curve data and calculates risk-free rates for VIX-style volatility calculations. This implementation follows the Cboe VIX Mathematics Methodology for interest rate calculations.
 
 ## Features
 
@@ -13,13 +13,12 @@ A Python tool that fetches US Treasury yield curve data and calculates risk-free
 - 📊 Performs linear interpolation for missing maturities
 - 🔄 Converts Bond Equivalent Yields (BEY) to continuously compounded APY rates
 - 📈 Calculates near-term and next-term rates for VIX calculations
-- 🦀 Generates Rust code snippets for direct integration
 - 🐳 Docker support for easy deployment
 - 📝 Zero external dependencies (uses only Python standard library)
 
 ## VIX Methodology Support
 
-This processor implements the interest rate calculation methodology from the CBOE VIX Mathematics Methodology document:
+This processor implements the interest rate calculation methodology from the Cboe VIX Mathematics Methodology document:
 
 - **BEY to APY conversion**: `APY = (1 + BEY/2)^2 - 1`
 - **Continuous rate conversion**: `r_t = ln(1 + APY)`
@@ -43,8 +42,8 @@ cd interest-rate-calculation-vix
 # Build the Docker image
 docker build -t treasury-rates .
 
-# Or pull from Docker Hub
-docker pull userFRM/treasury-rates:latest
+# Or pull from Docker Hub (if available)
+docker pull userfrm/treasury-rates:latest
 ```
 
 ## Usage
@@ -64,11 +63,8 @@ python src/treasury_rates.py --year 2024
 # JSON output only (for piping to other programs)
 python src/treasury_rates.py --json-only
 
-# Include Rust code output
-python src/treasury_rates.py --rust-output
-
 # Full example with all options
-python src/treasury_rates.py --near 23 --next 30 --year 2024 --rust-output --verbose
+python src/treasury_rates.py --near 23 --next 30 --year 2024 --verbose
 ```
 
 ### Docker
@@ -91,7 +87,7 @@ docker-compose up -d
 
 ```python
 import asyncio
-from treasury_rates import YieldCurveProcessor, YieldCurveConfig
+from src.treasury_rates import YieldCurveProcessor, YieldCurveConfig
 
 async def get_rates():
     # Create processor with custom configuration
@@ -121,7 +117,7 @@ print(f"Next-term rate: {rates['next_term_rate']:.4%}")
 ### Standard Output
 
 ```
-Latest Date: 2024-07-02T00:00:00
+Latest Date: 2025-01-10T00:00:00
 ----------------------------------------
 Maturity:    30 days, r_t: 0.042838
 Maturity:    60 days, r_t: 0.043817
@@ -138,8 +134,8 @@ Next-term rate (60 days): 0.043817 (4.38%)
 
 ```json
 {
-  "date": "2024-07-02T00:00:00",
-  "year": 2024,
+  "date": "2025-01-10T00:00:00",
+  "year": 2025,
   "vix_term_rates": {
     "near_term_rate": 0.042838,
     "next_term_rate": 0.043817,
@@ -154,18 +150,36 @@ Next-term rate (60 days): 0.043817 (4.38%)
 }
 ```
 
-### Rust Code Output
+## Command Line Arguments
 
-```rust
-// Risk-free rates for VIX calculation
-let risk_free_rates = RiskFreeRates {
-    near_term_rate: 0.042838,  // 4.28% annualized (30 days)
-    next_term_rate: 0.043817,  // 4.38% annualized (60 days)
-    timestamp: chrono::Utc::now(),  // Latest data from: 2024-07-02T00:00:00
-};
-```
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `--near` | Near-term days to expiration | 30 |
+| `--next` | Next-term days to expiration | 60 |
+| `--year` | Year for treasury data | Current year |
+| `--json-only` | Output JSON only (no text) | False |
+| `--output-file` | Output JSON file name | latest_yield_curve.json |
+| `--verbose` | Enable verbose logging | False |
 
 ## Development
+
+### Project Structure
+
+```
+interest-rate-calculation-vix/
+├── src/
+│   └── treasury_rates.py      # Main processor
+├── tests/
+│   └── test_treasury_rates.py # Unit tests
+├── .github/
+│   └── workflows/
+│       └── ci.yml            # GitHub Actions CI/CD
+├── Dockerfile                # Docker configuration
+├── docker-compose.yml        # Docker Compose setup
+├── README.md                 # This file
+├── LICENSE                   # MIT License
+└── .gitignore               # Git ignore rules
+```
 
 ### Running Tests
 
@@ -188,6 +202,18 @@ python -m pytest tests/test_treasury_rates.py::test_rate_interpolation
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+### Code Style
+
+This project follows PEP 8 style guidelines. Please ensure your code passes linting:
+
+```bash
+# Check code style
+pylint src/
+
+# Type checking
+mypy src/
+```
+
 ## CI/CD
 
 This project uses GitHub Actions for continuous integration:
@@ -195,8 +221,40 @@ This project uses GitHub Actions for continuous integration:
 - ✅ Automated testing on Python 3.8, 3.9, 3.10, 3.11, and 3.12
 - ✅ Code style checking with pylint
 - ✅ Type checking with mypy
-- ✅ Security scanning
+- ✅ Security scanning with Trivy
 - ✅ Docker image building and publishing
+
+## Technical Details
+
+### Interest Rate Calculation
+
+The processor follows the Cboe VIX methodology:
+
+1. **Fetch CMT Yields**: Retrieves Constant Maturity Treasury yields from US Treasury
+2. **Interpolation**: Linear interpolation for missing maturities
+3. **BEY to APY**: Converts semi-annual Bond Equivalent Yields to Annual Percentage Yields
+4. **Continuous Rate**: Converts APY to continuously compounded rates using natural logarithm
+
+### Supported Maturities
+
+The following fixed maturities are used for interpolation:
+- 30, 60, 91, 182, 365, 730, 1095, 1825, 2555, 3650, 7300, 10950 days
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Network errors**: Ensure you have internet access to reach the US Treasury website
+2. **Year out of range**: The Treasury may not have data for future years or very old years
+3. **Missing data**: Some dates may not have complete yield curve data
+
+### Debug Mode
+
+Run with `--verbose` flag for detailed logging:
+
+```bash
+python src/treasury_rates.py --verbose
+```
 
 ## License
 
@@ -205,10 +263,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - US Treasury for providing public yield curve data
-- CBOE for the VIX Mathematics Methodology documentation
+- Cboe for the VIX Mathematics Methodology documentation
 - The Python community for the excellent standard library
 
 ## Support
 
 - 🐛 Issues: [GitHub Issues](https://github.com/userFRM/interest-rate-calculation-vix/issues)
 - 💬 Discussions: [GitHub Discussions](https://github.com/userFRM/interest-rate-calculation-vix/discussions)
+- 📧 Contact: Open an issue for questions
+
+---
+
+Made with ❤️ for the quantitative finance community

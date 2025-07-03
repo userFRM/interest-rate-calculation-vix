@@ -396,15 +396,6 @@ class YieldCurveProcessor:
 
         return "\n".join(lines)
 
-    def format_rust_output(self, vix_rates: Dict[str, float], timestamp: str) -> str:
-        """Format output for Rust project."""
-        return f"""// Risk-free rates for VIX calculation
-let risk_free_rates = RiskFreeRates {{
-    near_term_rate: {vix_rates['near_term_rate']:.6f},  // {vix_rates['near_term_rate']*100:.2f}% annualized ({vix_rates['near_term_days']} days)
-    next_term_rate: {vix_rates['next_term_rate']:.6f},  // {vix_rates['next_term_rate']*100:.2f}% annualized ({vix_rates['next_term_days']} days)
-    timestamp: chrono::Utc::now(),  // Latest data from: {timestamp}
-}};"""
-
 
 def parse_arguments():
     """Parse command line arguments."""
@@ -424,9 +415,6 @@ Examples:
 
   # JSON output only
   python treasury_rates.py --json-only
-
-  # Rust code output
-  python treasury_rates.py --rust-output
         """
     )
 
@@ -455,12 +443,6 @@ Examples:
         '--json-only',
         action='store_true',
         help='Output JSON only (no text output)'
-    )
-
-    parser.add_argument(
-        '--rust-output',
-        action='store_true',
-        help='Include Rust code output'
     )
 
     parser.add_argument(
@@ -530,14 +512,6 @@ async def main():
                 print("="*60)
                 print(f"Near-term rate ({vix_rates['near_term_days']} days): {vix_rates['near_term_rate']:.6f} ({vix_rates['near_term_rate']*100:.2f}%)")
                 print(f"Next-term rate ({vix_rates['next_term_days']} days): {vix_rates['next_term_rate']:.6f} ({vix_rates['next_term_rate']*100:.2f}%)")
-
-                # Output Rust code if requested
-                if args.rust_output:
-                    rust_output = processor.format_rust_output(vix_rates, latest_date)
-                    print("\n" + "="*60)
-                    print("Rust Code (copy and paste into your project):")
-                    print("="*60)
-                    print(rust_output)
 
             # Save to JSON file
             output_data = {
